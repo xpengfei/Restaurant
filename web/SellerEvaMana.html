@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>评价管理</title>
+    <link rel="stylesheet" href="static/boostrap/css/bootstrap.css">
+    <link rel="stylesheet" href="static/easyUI/themes/default/easyui.css">
+    <link rel="stylesheet" href="static/easyUI/themes/icon.css">
+    <script src="static/easyUI/jquery-3.2.0.js"></script>
+    <script src="static/boostrap/js/bootstrap.js"></script>
+    <script src="static/easyUI/jquery.easyui.min.js"></script>
+    <script src="static/easyUI/locale/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+<script>
+    $(function () {
+        $("#foodDataGrid").datagrid({
+            url: '/Restaurant/getCommentList',
+            iconCls: 'icon-save',
+            striped: "true",
+            pagination: 'true',
+            pageSize: 4,
+            pageList: [4, 8, 12, 16, 20, 24, 28, 32, 36, 40],
+            fit: true,
+            fitColumns: true,
+            nowrap: false,
+            border: false,
+            isField: 'id',
+            sortName: 'id',
+            toolbar: [{
+                iconCls: 'icon-edit',
+                text: '回复评论',
+                handler: function () {
+                    currentState = 'update';
+                    modifyItem();
+                }
+            }],
+            sortOrder: 'asc',
+            columns: [[{title: '订单编号', field: 'id', width: 30, sortable: 'true'},
+                {
+                    title: '美食图片',
+                    field: 'foodImg',
+                    align: 'center',
+                    width: 100,
+                    formatter: function (value, row, index) {
+                        return '<img width="90px" height="90px" src="' + row.foodimg + '" />';
+                    }
+                },
+                {title: '美食名称', field: 'foodname', width: 100, sortable: 'true'},
+                {title: '买家昵称', field: 'userid', width: 100, sortable: 'true'},
+                {title: '评价内容', field: 'judcon', width: 100, sortable: 'true'},
+                {title: '评价时间', field: 'judtime', width: 100, sortable: 'true'}]]
+        });
+    });
+</script>
+<table id="foodDataGrid"></table>
+<script>
+    var currentState;
+    //DataGrid右键菜单代码：
+    $("#foodDataGrid").datagrid({
+        onRowContextMenu: function (e, rowIndex, rowData) { //右键时触发事件
+            //三个参数：e里面的内容很多owIndex就是当前点击时所在行的索引，rowData当前行的数据
+            e.preventDefault(); //阻止浏览器捕获右键事件
+            $(this).datagrid("clearSelections"); //取消所有选中项
+            $(this).datagrid("selectRow", rowIndex); //根据索引选中该行
+            $('#menu').menu('show', {
+                //显示右键菜单
+                left: e.pageX,//在鼠标点击处显示菜单
+                top: e.pageY
+            });
+            e.preventDefault();  //阻止浏览器自带的右键菜单弹出
+        }
+    });
+
+    function ReplyEva() {
+        $('#win').window('close');
+    }
+    $("#btn_Delete").click(function () {
+        removeItem();
+    });
+    $("#btn_Modify").click(function () {
+        modifyItem();
+    });
+    function modifyItem() {
+        var selections = $("#foodDataGrid").datagrid("getSelections");
+        if (selections.length == 0) {
+            $.messager.alert("提示", "请选择一条评价进行回复");
+        } else if (selections.length > 1) {
+            $.messager.alert("提示", "一次只能回复一条评价");
+        } else {
+            $("#win").window({
+                title: '回复评价'
+            });
+            $('#win').window('open');
+            var selection = selections[0];
+            $("#foodName").val(selection.foodname);
+            $("#foodPrice").val(selection.foodprice);
+            $("#priceType").val(selection.pricetype);
+            $("#fid").val(selection.id);
+        }
+    }
+
+</script>
+</body>
+</html>

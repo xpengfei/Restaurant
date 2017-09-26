@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>商家登陆</title>
+    <link rel="stylesheet" href="static/boostrap/css/bootstrap.css">
+    <link rel="stylesheet" href="static/easyUI/themes/default/easyui.css">
+    <link rel="stylesheet" href="static/easyUI/themes/icon.css">
+    <script src="static/easyUI/jquery-3.2.0.js"></script>
+    <script src="static/boostrap/js/bootstrap.js"></script>
+    <script src="static/easyUI/jquery.easyui.min.js"></script>
+    <script src="static/easyUI/locale/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+<div id="dd">
+    <form id="loginform" method="post">
+        <br/>
+        <div class="input-group">
+            <span class="input-group-addon">手机号码</span>
+            <input type="text" class="form-control" id="username" name="phonenumber" aria-describedby="basic-addon3">
+        </div>
+        <br/>
+        <div class="input-group">
+            <span class="input-group-addon">密码</span>
+            <input type="password" class="form-control" id="password" name="password" aria-describedby="basic-addon3">
+        </div>
+    </form>
+</div>
+<script>
+    $("#dd").dialog({
+        title:'商家登陆',
+        width: 500,
+        height: 200,
+        closed: false,
+        cache: false,
+        closable: false,
+        modal: true,
+        draggable:false,
+        buttons: [{
+            text: '切换到买家登陆>>', handler: function () {
+                location.href="UserLogin.html";
+            }
+        },{
+            text: '还没账号?去注册>>', handler: function () {
+                location.href="SellerReg.html";
+            }
+        }, {
+            text: '登录', handler: function () {
+                $('#loginform').form('submit', {
+                        url:'/admin/login',
+                    onSubmit: function(){
+                        var phonenumber = $("#username").val();
+                        var password = $("#password").val();
+                        if (phonenumber.length == 0) {
+                            $.messager.alert("warning", "请输入登录的手机号码！");
+                            return 0;
+                        }
+                        if (password.length == 0) {
+                            $.messager.alert("warning", "请输入密码！");
+                            return 0;
+                        }
+                },
+                success:function(msg){
+                    var data = JSON.parse(msg);
+                    $.messager.alert("提示", data.msg, null, function () {
+                        if (data.state == "ok")
+                            location.href = 'SellerIndex.html';
+                    })
+                }
+            });
+            }
+        }]
+    });
+</script>
+</body>
+</html>

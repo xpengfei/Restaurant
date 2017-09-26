@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户购物车</title>
+    <link rel="stylesheet" href="static/css.css">
+    <link rel="stylesheet" href="static/list.css">
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="static/boostrap/css/bootstrap.css">
+    <link rel="stylesheet" href="static/easyUI/themes/default/easyui.css">
+    <link rel="stylesheet" href="static/easyUI/themes/icon.css">
+    <script src="static/easyUI/jquery-3.2.0.js"></script>
+    <script src="static/boostrap/js/bootstrap.js"></script>
+    <script src="/Restaurant/static/easyui/jquery.easyui.min.js"></script>
+    <script src="static/easyUI/jquery.easyui.min.js"></script>
+    <script src="static/easyUI/locale/easyui-lang-zh_CN.js"></script>
+
+</head>
+<body background="img/4.gif">
+<div class='home-header head_top' id='home-header'>
+    <div class='wrapper'>
+		     <span class="change-city fl">
+			    <a href='city_index.html'><i class="ico ico_change_city"></i>深圳</a>
+		      </span>
+        <ul class="nav-lst fr">
+            <li class='lio '>
+                <a class="" href="Userindex.html" target='_self' data-sign='index'>首页</a>
+            </li>
+            <li class='lio '>
+                <a class="on" href="UserOrder.html" target='_self' data-sign='order'>我的订单</a>
+            </li>
+            <li class='lio hover'>
+                <a class="" href="UserReg.html" target='_self' data-sign='reg'>注册</a>
+            </li>
+            <li class='lio hover'>
+                <a class="" href="UserLogin.html" target='_self' data-sign='login'>登录</a>
+            </li>
+            <div class='clr'></div>
+        </ul>
+    </div>
+</div>
+<script>//打印现有的菜品
+$(function () {
+    $("#ourFood").datagrid({
+        url: '/user/getOrderList',
+        striped: "true",
+        pagination: 'true',
+        pageSize: 5,
+        pageList: [5, 10, 15, 20, 25, 30],
+        fit: true,
+        fitColumns: true,
+        nowrap: false,
+        border: false,
+        isField: 'id',
+        sortName: 'id',
+        toolbar: [{
+            iconCls: 'icon-edit',
+            text: '评论',
+            handler: function () {
+                commentItem();
+            }
+        }],
+        sortOrder: 'asc',
+        columns: [[{title: '订单编号', field: 'id', width: 30, sortable: 'true'},
+            {title: '菜品图片', field: 'foodImg', width: 60, sortable: 'true',
+                formatter: function (value, row, index) {
+                    return '<img width="90px" height="90px" src="' + row.foodimg + '" />';
+                }
+            },
+            {title: '菜品名称', field: 'foodname', width: 60, sortable: 'true'},
+            {title: '菜品价格', field: 'foodprice', width: 60, sortable: 'true'},
+            {title: '计价方式', field: 'pricetype', width: 60, sortable: 'true'},
+            {title: '数量', field: 'foodnumber', width: 60, sortable: 'true'},
+            {title: '商家名称', field: 'sellername', width: 60, sortable: 'true'}
+
+        ]]
+    });
+});
+</script>
+<div class='filter-nav' style="height:500px;">
+    <table id="ourFood" >
+    </table>
+</div>
+<div id="win" class="easyui-window"  style="width:400px;height:200px"
+     data-options="iconCls:'icon-save',modal:true,collapsible:false,minimizable:false,maximizable:false,closed:true">
+    <form id="saveFoodForm" enctype="multipart/form-data" method="post" action="/Restaurant/addFood">
+        <div align="center" style="margin-top:40px;">
+            <table align="center">
+            <tr>
+                <td >评价内容:</td>
+                <td><input type="text" name="foodName" id="Judcon" ></td>
+            </tr>
+
+            <tr>
+                <td colspan="2" align="center" style="text-align: center">
+                    <a id="confirmBtn" class="easyui-linkbutton" icon="icon-save" href="javascript:void(0)"
+                       onclick="{var selectId =$('#confirmBtn').val();$.messager.alert('','评价成功！');}"
+                       >提交</a>
+                    <a class="easyui-linkbutton" icon="icon-cancel" href="javascript:void(0)"
+                       onclick="cancelFood();">取消</a>
+                </td>
+            </tr>
+        </table>
+        </div>
+    </form>
+</div>
+<script>
+    function commentItem() {
+        var selections = $("#ourFood").datagrid("getSelections");
+        if(selections.length==0){
+            $.messager.alert("提示","请选择要评论的订单!");
+            return;
+        }
+        if(selections.length>1){
+            $.messager.alert("提示","一次只能评论一条订单!");
+            return;
+        }
+        var orderId = '';
+        $.each(selections, function (index, ele) {
+            orderId += ele.id + '';
+        });
+        var selection = selections[0];
+        var foodName = selection.foodname;
+        var foodimg = selection.foodimg;
+        $.messager.prompt('评价', '评价内容:', function(r){
+            if (r){
+                $.ajax({
+                    url: '/user/commentOrder',
+                    type: 'post',
+                    data: {orderId: orderId,commentMsg:r,foodName:foodName,foodImg:foodimg},
+                    success: function (msg) {
+                        $.messager.alert("提示", msg.msg, null, function () {
+                            if (msg.state == 'ok') {
+                                $('#ourFood').datagrid('reload');
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
+    }
+</script>
+</body>
+</html>

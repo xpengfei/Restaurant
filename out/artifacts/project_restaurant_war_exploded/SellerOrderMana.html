@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>订单管理</title>
+    <link rel="stylesheet" href="static/boostrap/css/bootstrap.css">
+    <link rel="stylesheet" href="static/easyUI/themes/default/easyui.css">
+    <link rel="stylesheet" href="static/easyUI/themes/icon.css">
+    <script src="static/easyUI/jquery-3.2.0.js"></script>
+    <script src="static/boostrap/js/bootstrap.js"></script>
+    <script src="static/easyUI/jquery.easyui.min.js"></script>
+    <script src="static/easyUI/locale/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+<script>
+    $(function () {
+        $("#datagrid").datagrid({
+            url: '/Restaurant/getOrderList',
+            striped: "true",
+            pagination: 'true',
+            pageSize: 10,
+            pageList: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+            fit: true,
+            fitColumns: true,
+            nowrap: false,
+            border: false,
+            isField: 'id',
+            sortName: 'id',
+            sortOrder: 'asc',
+            columns: [[{title: '编号', field: 'foodid', width: 50, sortable: 'true'},
+                {
+                    title: '美食图片',
+                    field: 'foodimg',
+                    align: 'center',
+                    width: 100,
+                    formatter: function (value, row, index) {
+                        return '<img width=50% height=50% src="' + row.foodimg + '" />';
+                    }
+                },
+                {title: '菜品名称', field: 'foodname', width: 100, sortable: 'true'},
+                {title: '菜品数量', field: 'foodnumber', width: 40, sortable: 'true'},
+                {title: '取餐时间', field: 'getfoodtime', width: 100, sortable: 'true'}]]
+        });
+    });
+</script>
+<div id="tabs" class="easyui-tabs" fit="true" border="false" style="overflow: hidden;width: 100%;height: 100%">
+    <table id="datagrid" style="margin: 0px;padding: 0px;width: 100%;height: 100%" fit="true"></table>
+</div>
+</body>
+</html>

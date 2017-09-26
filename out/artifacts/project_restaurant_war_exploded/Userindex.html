@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=10">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title> 商家信息</title>
+    <link rel="stylesheet" href="static/css.css">
+    <link rel="stylesheet" href="static/list.css">
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="static/easyUI/themes/default/easyui.css">
+    <link rel="stylesheet" href="static/easyUI/themes/icon.css">
+    <script src="static/easyUI/jquery-3.2.0.js"></script>
+    <script src="/Restaurant/static/easyui/jquery.easyui.min.js"></script>
+    <script src="static/easyUI/jquery.easyui.min.js"></script>
+    <script src="static/easyUI/locale/easyui-lang-zh_CN.js"></script>
+</head>
+<body background="img/4.gif">
+<div class='home-header head_top' id='home-header'>
+    <div class='wrapper'>
+		     <span class="change-city fl">
+			    <a href='city_index.html'><i class="ico ico_change_city"></i>深圳</a>
+		      </span>
+        <ul class="nav-lst fr">
+            <li class='lio '>
+                <a class="on" href="Userindex.html" target='_self' data-sign='index'>首页</a>
+            </li>
+            <li class='lio '>
+                <a class="" href="UserOrder.html" target='_self' data-sign='sale'>我的订单</a>
+            </li>
+            <li class='lio hover'>
+                <a class="" href="UserReg.html" target='_self' data-sign='newhouse'>注册</a>
+            </li>
+            <li class='lio hover'>
+                <a class="" href="UserLogin.html" target='_self' data-sign='newhouse'>登录</a>
+            </li>
+            <div class='clr'></div>
+        </ul>
+    </div>
+</div>
+<div class="searchs">
+    <div class="wrapper">
+
+        <div class="fl" log-mod='search'>
+            <div class="search-txt">
+                <form id='TopSearchForm' action="house_info" method='' class="claer" data-action='' >
+                    <div class="search-tab">
+                        <i class="icon" data-bl="switch"></i>
+                        <div data-bl="switch" class="check" >食物编号</div>
+                        <div class="txt-serach">
+                            <input class="left txt autoSuggest" name="keyword" autocomplete="off" placeholder="输入下单食物编号" id="keyword-box" />
+                        </div>
+                    </div>
+                    <a href='javascript:void(0);' id='top_act_search' class="act-search btn home-ico ico-search" onclick="makeOrder()">下单
+                    </a>
+                </form>
+            </div>
+        </div>
+        <div class="wrap-video-all"></div>
+    </div>
+</div>
+<div class='wrapper'>
+    <div class="cardwrap clear">
+        <div class="firstcon fl">
+            <p class="clear">
+                <span class="title"><a  target="_blank">深圳</a></span>
+                <span class="housbg">城市</span>
+            <div class='clr'></div>
+            </p>
+        </div>
+        <div class="secondcon fl">
+        </div>
+        <div class='clr'></div>
+
+    </div>
+</div>
+<div class='filter-nav'>
+    <div class='filter-bar01' >
+        <ul class="sort-btns">
+            <li>
+                <a onClick="quickSearch(0,'o');return false;" class="cur" onfocus=blur()>
+                    热销榜</a></li>
+            <li>
+                <a onClick="quickSearch(4,'o');return false;"  class="" onfocus=blur()>
+                    好评榜</a></li>
+            <li>
+                <a onClick="quickSearch(5,'o');return false;" class="" onfocus=blur()>
+                    《私人订制》</a></li>
+        </ul>
+    </div>
+</div>
+<script>//打印现有的菜品
+$(function () {
+    $("#ourFood").datagrid({
+        url: '/user/getAllFoodList',
+        striped: "true",
+        pagination: 'true',
+        pageSize: 5,
+        pageList: [5, 10, 15, 20, 25, 30],
+        fit: true,
+        fitColumns: true,
+        nowrap: false,
+        border: false,
+        isField: 'id',
+        sortName: 'id',
+        sortOrder: 'asc',
+        columns: [[{title: '编号', field: 'id', width: 20, sortable: 'true'},
+            {title: '菜品图片', field: 'foodimg', width: 60, sortable: 'true',
+                formatter: function (value, row, index) {
+                    return '<img width="90px" height="90px" src="' + row.foodimg + '" />';
+                }
+            },
+            {title: '菜品名称', field: 'foodname', width: 60, sortable: 'true'},
+            {title: '菜品价格', field: 'foodprice', width: 60, sortable: 'true'},
+            {title: '计价方式', field: 'pricetype', width: 60, sortable: 'true'},
+            {title: '商家名称', field: 'sellerid', width: 60, sortable: 'true'}
+
+        ]]
+    });
+});
+
+function makeOrder()
+{
+    var selectId =$('#keyword-box').val();//输入框所获得的值
+    if(selectId.length==0){
+        $.messager.alert('提示',"请输入下单食物的编号");
+    }
+    $('#win').window('open');
+    //$.messager.alert('',selectId);
+}
+
+function setOrder() {
+    var foodId =$('#keyword-box').val();//输入框所获得的值
+    var foodnumber = $('#foodNumber').val();
+    var getfoodtime = $('#getFoodTime').val();
+    //$.messager.alert('',selectId);
+    $.ajax({
+        url: '/user/orderFood',
+        type: 'post',
+        data: {foodId: foodId,foodNumber:foodnumber,getFoodTime:getfoodtime},
+        success: function (msg) {
+            $.messager.alert("提示", msg.msg, null, function () {
+                if (msg.state == 'ok') {
+                    location.href = 'Userindex.html';
+                }
+            });
+        }
+    });
+}
+
+</script>
+<div class='filter-nav' style="height:500px;">
+    <table id="ourFood" >
+    </table>
+</div>
+
+<div id="win" class="easyui-window" title="下单" style="width:300px;height:150px"
+     data-options="iconCls:'icon-save',modal:true,collapsible:false,minimizable:false,maximizable:false,closed:true">
+    <form id="orderForm" enctype="multipart/form-data" method="post" action="/user/orderFood">
+        <table align="center">
+            <tr>
+                <td>数量:</td>
+                <td><input type="hidden" name="fid" id="fid"><input type="text" name="foodnumber" id="foodNumber"></td>
+            </tr>
+            <tr>
+                <td>取餐时间:</td>
+                <td><input type="text" name="getfoodtime" id="getFoodTime"></td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center" style="text-align: center">
+                    <a id="confirmBtn" class="easyui-linkbutton" icon="icon-save" href="javascript:void(0)"
+                       onclick="setOrder();">提交</a>
+                    <a class="easyui-linkbutton" icon="icon-cancel" href="javascript:void(0)"
+                       onclick="cancelFood();">取消</a>
+                    <!--<input type="submit" value="保存">-->
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+</body>
+</html>
+
+
+
+

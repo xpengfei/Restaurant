@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=10">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title> - 用户注册</title>
+    <link rel="stylesheet" href="static/css.css">
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="static/login.css">
+</head>
+<body>
+<div class="user-login">
+    <div class="back">
+        <a href="Userindex.html" class="fl">返回首页</a>
+        <div class="fr">
+            已有账号？<a href="UserLogin.html" id="actResetUrl">马上登录</a>
+        </div>
+    </div>
+    <div class="wrapper">
+        <div class="bg-image">
+            <img src="img/1.jpg"/>//设置背景图
+        </div>
+        <div class="logo">
+            <div class='logo-tit'><h3>个人信息管理中心</h3><p>注册页面</p></div>
+        </div>
+        <div class="reset-pwd registerred">
+            <form onsubmit="return register();" action="\register" method="post" id="registerForm" name='registerForm'>
+                <ul>
+                    <li class="border username">
+                        <label class='ico'></label>
+                        <input id="userName" type="text" value="" class="input_region" name="username"  placeholder="请输入手机号" custom="ckmobile"  validateName='手机号' onclick=" {
+                        var userID =$('#userName').val();//输入框所获得的值
+                        }">
+                        <i>*</i>
+                    </li>
+                    <li class="border username">
+                        <label class='ico'></label>
+                        <input id="email" type="text" value="" class="input_region" name="email"  placeholder="请输入邮箱地址" custom="ckmobile"  validateName='邮箱地址' onclick=" {
+                          var Email =$('#email').val();//输入框所获得的值
+                     }">
+                        <i>*</i>
+
+                    </li>
+                    <li class="border pwd">
+                        <label class='ico'></label>
+                        <input id="passW" type="password" value="" class="input_region" name="passwd"  placeholder="请输入密码" id="passwd"  max="20" min="6" onclick=" {
+                          var password =$('#passW').val();//输入框所获得的值
+                     }">
+                        <i>*</i>
+                    </li>
+                    <li class="border pwd">
+                        <label class='ico'></label>
+                        <input id="passC" type="password" value="" class="input_region" name="passwd2" placeholder="请确认密码"  onclick=" {
+                          var passcon =$('#passC').val();//输入框所获得的值
+
+                     }" >
+                        <i>*</i>
+                    </li>
+                    <li>
+                        <input type='hidden' name='formhash' value='VCtJpTlchOYaeaNmuZNoM6Kn8pRjNbD' />
+                        <input type="hidden" name="nchash" value="" />
+                        <input type="hidden" name="form_submit" value="ok" />
+                        <input type="hidden" name="back_to" value="" />
+                        <input type="hidden" name="user_type"  value="1" />
+                        <input type="submit" value="立即注册" class="up-pwd actSubmit" />
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+
+<script type="text/javascript">
+    function register(){
+        var mess=document.registerForm.username.value;
+        if(mess=="")
+        {
+            window.alert("请输入手机号");
+            return false;
+        }
+        if(mess.length!=11)
+        {
+            window.alert("请输入正确的手机号");
+            return false;
+        }
+        mess=document.registerForm.email.value;
+        if(mess=="")
+        {
+            window.alert("请输入邮箱地址");
+            return false;
+        }
+        mess=document.registerForm.passwd.value;
+        if(mess=="")
+        {
+            window.alert("请输入密码");
+            return false;
+        }
+        mess=document.registerForm.passwd2.value;
+        if(mess=="")
+        {
+            window.alert("两次密码输入不一致");
+            return false;
+        }
+        return true;
+    }
+</script>
+
+</html>
+

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=10">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title> - 登&nbsp;&nbsp;&nbsp;录</title>
+    <link rel="stylesheet" href="static/css.css">
+    <link rel="stylesheet" href="static/login.css">
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+<div class="user-login">
+    <div class="back">
+        <a href="Userindex.html" class="fl">返回首页</a>
+        <div class="fr"><a href="SellerLogin.html" style="margin-left: 50px;">商家登陆</a></div>
+        <div class="fr">还没有账号？<a href="UserReg.html">马上注册</a></div>
+        <div class='clr'></div>
+    </div>
+    <div class="wrapper">
+        <div class="bg-image">
+           <img src="img/1.jpg"/>
+        </div>
+        <div class="logo">
+            <div class='logo-tit'><h3>个人信息管理中心</h3><p>登录中心</p></div>
+        </div>
+        <div class="login-cun">
+            <form id="loginUserForm" name="loginUserForm" class="fm-v clearfix" action="/login" onsubmit="return login()" method="post">
+                <ul class="user-logn">
+
+                    <li class="user-phone b">
+                        <div class="li-bg error"><label></label>
+                            <input id="username" name="username" validatename="手机号" autocomplete="off" placeholder="请输入手机号" class="phonecode" type="text" validate="notNull,isTel" onclick=" {
+                          var selectId =$('#username').val();//输入框所获得的值
+                          $.messager.alert('','下单成功！');
+                        }">
+                            <div class="err" id="errMsg_username"></div>
+                        </div>
+                    </li>
+
+                    <li class="pwd b">
+                        <div class="li-bg"><label></label>
+                            <input id="passwd" name="passwd" validatename="密码" placeholder="请输入登录密码" validate="notNull" type="password" onclick=" {
+                          var selectPassword =$('#passwd').val();//输入框所获得的值
+                          $.messager.alert('','下单成功！');
+                         }">
+                            <div class="err" id="errMsg_passwd"></div>
+                        </div>
+                    </li>
+
+                    <li>
+                        <div class="fl"><label><input type="checkbox" name="notForget" value="1" class="mind-login" />下次自动登录（慎用）</label></div>
+                        <div class='clr'></div>
+                    </li>
+                    <li>
+                        <input type='hidden' name='formhash' value='ZTNaDVZ_yTPf5E-B2XQaW7XssmvHoQ6' />
+                        <input type="hidden" name="user_type" value="2" />
+                        <input type="hidden" name="back_to" value="register.html" />
+                        <input type="hidden" name="form_submit" value="ok" />
+                        <input type="hidden" name="nchash" value="" />
+                        <input type="submit" value="立即登陆" class="up-pwd actSubmit actDoSubmit" />
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+
+<script type="text/javascript">
+    function login(){
+        var mess=document.loginUserForm.username.value;
+        if(mess=="")
+        {
+            window.alert("请输入手机号");
+            return false;
+        }
+        if(mess.length!=11)
+        {
+            window.alert("请输入正确的手机号");
+            return false;
+        }
+        mess=document.loginUserForm.passwd.value;
+        if(mess=="")
+        {
+            window.alert("请输入密码");
+            return false;
+        }
+        return true;
+    }
+</script>
+
+</html>

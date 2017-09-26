@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>菜品管理</title>
+    <link rel="stylesheet" href="static/boostrap/css/bootstrap.css">
+    <link rel="stylesheet" href="static/easyUI/themes/default/easyui.css">
+    <link rel="stylesheet" href="static/easyUI/themes/icon.css">
+    <script src="static/easyUI/jquery-3.2.0.js"></script>
+    <script src="static/boostrap/js/bootstrap.js"></script>
+    <script src="static/easyUI/jquery.easyui.min.js"></script>
+    <script src="static/easyUI/locale/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+    <form name="test" action="">
+       <!--
+        <table class="easyUI">
+            <thead>
+                <tr>
+                    <th data-options="field:'code'">Code</th>
+                    <th data-options="field:'name'">Name</th>
+                    <th data-options="field:'price'">Price</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>001</td><td>name1</td><td>2323</td>
+                </tr>
+                <tr>
+                    <td>002</td><td>name2</td><td>4612</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+        <table class="easyui-datagrid" style="width:400px;height:250px"
+               data-options="url:'datagrid_data.json',fitColumns:true,singleSelect:true">
+            <thead>
+            <tr>
+                <th data-options="field:'code',width:100">Code</th>
+                <th data-options="field:'name',width:100">Name</th>
+                <th data-options="field:'price',width:100,align:'right'">Price</th>
+            </tr>
+            </thead>
+        </table>
+        -->
+        <table id="dg">
+            <thead>
+                <tr>
+                    <th data-options="field:'code',width:100">Code</th>
+                    <th data-options="field:'name',width:100">Name</th>
+                    <th data-options="field:'price',width:100,align:'right'">Price</th>
+                </tr>
+            </thead>
+        </table>
+    </form>
+    <script>
+        $('#dg').datagrid({
+            url:'data.json',
+            columns:[[
+                {"code":1,"name":"yifu","price":20},
+                {"code":2,"name":"xiezi","price":40},
+                {"code":3,"name":"maozi","price":60},
+                {"code":4,"name":"beizi","price":80},
+                {"code":5,"name":"shu","price":100}
+            ]]
+
+        });
+
+    </script>
+</body>
+</html>

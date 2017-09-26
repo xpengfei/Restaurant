@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户中心</title>
+</head>
+<body>
+<div id="wname_win" style="padding:50px;">
+    <table align="center" >
+       <tr height="100px">
+            <td width="100px">店铺图片</td>
+            <td width="120px" id="wimg"></td>
+            <td>
+                <button class="btn btn-primary btn-xs" role="button" onclick="modifySellerMsg('wimg');">修改</button>
+            </td>
+        </tr>
+        <tr height="40px">
+            <td width="60px">店铺名称</td>
+            <td style="color: #ff030a" width="120px"><strong id="wname"></strong></td>
+            <td>
+                <button class="btn btn-primary btn-xs" role="button" onclick="modifySellerMsg('wname');">修改</button>
+            </td>
+        </tr>
+        <tr height="40px">
+            <td width="60px">手机号码</td>
+            <td style="color: #ff030a" width="120px"><strong id="wphone"></strong></td>
+            <td>
+                <button class="btn btn-primary btn-xs" role="button" onclick="modifySellerMsg('phonenumber');">修改
+                </button>
+            </td>
+        </tr>
+        <tr height="40px">
+            <td width="60px">店铺地址</td>
+            <td style="color: #ff030a" width="120px"><strong id="waddress"></strong></td>
+            <td>
+                <button class="btn btn-primary btn-xs" role="button" onclick="modifySellerMsg('address');">修改
+                </button>
+            </td>
+        </tr>
+        <tr height="40px">
+            <td width="60px">店铺好评率</td>
+            <td style="color: #ff030a" width="120px"><strong id="wgood"></strong></td>
+        </tr>
+        <tr height="80px">
+            <td colspan="2" align="center">
+                <button type="button" class="btn btn-danger" onclick="modifySellerMsg('logoutAccount');">注销账户</button>
+            </td>
+        </tr>
+    </table>
+</div>
+<div id="update_win" class="easyui-window" title="修改" style="width:450px;height:200px"
+     data-options="modal:true,collapsible:false,minimizable:false,maximizable:false,closed:true">
+    <form method="post" id="ff">
+        <div align="center">
+            <strong id="itemname"></strong><input id="itemvalue" type="text"><br><br><br>
+            <a id="confirmBtn" class="easyui-linkbutton" icon="icon-save" href="javascript:void(0)"
+               onclick="updateItem();">提交</a>
+            <a class="easyui-linkbutton" icon="icon-cancel" href="javascript:void(0)"
+               onclick="cancelUpdate();">取消</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    var currentState;
+    function updateItem() {
+        var itemvalue = $("#itemvalue").val();
+        if (currentState != 'wimg') {
+            $('#ff').form('submit', {
+                url: '/Restaurant/updateseller',
+                onSubmit: function () {
+                    if (currentState == 'phonenumber') {
+                        if (itemvalue == '' || itemvalue.length != 11) {
+                            $.messager.alert('提示', '请输入正确的手机号码');
+                            return false;
+                        }
+                        $("#itemvalue").attr("name", "phonenumber");
+                    } else if (currentState == 'wname') {
+                        if (itemvalue == '') {
+                            $.messager.alert('提示', '店铺名不能为空');
+                            return false;
+                        }
+                        $("#itemvalue").attr("name", "wname");
+                    }
+                },
+                success: function (data) {
+                    var msg = JSON.parse(data);
+                    $.messager.alert("提示", msg.msg, null, function () {
+                        if (msg.state == 'ok') {
+                            initSellerMsg();
+                        }
+                        $("#update_win").window("close");
+                    })
+                }
+            });
+        } else {
+            $("#itemvalue").attr("name", "wimg");
+            console.log("000000000000000000000");
+            $('#ff').form('submit', {
+                url: '/Restaurant/updateImg',
+                onSubmit: function () {
+                    if(itemvalue.length==0) {
+                        $.messager.alert("提示","图片不可以为空");
+                        return false;
+                    }
+                },
+                success: function (data) {
+                    var jsonData = JSON.parse(data);
+                    $.messager.alert("提示",jsonData.msg,null,function () {
+                        if (jsonData.state == 'ok') {
+                            initSellerMsg();
+                        }
+                        $("#update_win").window("close");
+                    });
+                }
+            });
+        }
+    }
+    function cancelUpdate() {
+        $("#update_win").window("close");
+    }
+    function modifySellerMsg(flag) {
+        $("#itemvalue").val('');
+        if (flag == 'phonenumber') {
+            currentState = 'phonenumber';
+            $("#ff").removeAttr("enctype");
+            $("#itemvalue").attr("type", "text");
+            $("#itemname").html('请输入新的手机号码:');
+        } else if (flag == 'wname') {
+            currentState = 'wname';
+            $("#ff").removeAttr("enctype");
+            $("#itemvalue").attr("type", "text");
+            $("#itemname").html('请输入新的店铺名称:');
+        } else if (flag == 'wimg') {
+            currentState = 'wimg';
+            $("#ff").attr("enctype", "multipart/form-data");
+            $("#itemvalue").attr("type", "file");
+            $("#itemname").html('请选择新的图片:');
+        } else if (flag == 'logoutAccount') {
+            $.messager.confirm('提示', '账户注销后将不能再使用，确定注销账户吗?', function (r) {
+                if (r) {
+                    $.ajax({
+                        url: '/Restaurant/logoutAccount',
+                        success: function (msg) {
+                            $.messager.alert("提示", msg.msg, null, function () {
+                                if (msg.state == 'ok') {
+                                    top.location.href = '/Restaurant/html/login.html'
+                                }
+                            })
+                        }
+                    });
+                }
+            });
+            return;
+        }
+        $("#update_win").window("open");
+    }
+    $('#wname_win').panel({
+        width: 500,
+        height: 400,
+        title: '店铺信息'
+    });
+    function initSellerMsg() {
+        $.ajax({
+            url: '/Restaurant/getseller',
+            success: function (msg) {
+                $("#wname").html(msg.windowname);
+                $("#wphone").html(msg.phonenumber);
+                $("#wimg").html('<img src="' + msg.windowimg + '" width="100px" height="100px"/>');
+            }
+        });
+    }
+    initSellerMsg();
+</script>
+</body>
+</html>

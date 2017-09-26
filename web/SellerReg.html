@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>商家注册</title>
+    <link rel="stylesheet" href="static/boostrap/css/bootstrap.css">
+    <link rel="stylesheet" href="static/easyUI/themes/default/easyui.css">
+    <link rel="stylesheet" href="static/easyUI/themes/icon.css">
+    <script src="static/easyUI/jquery-3.2.0.js"></script>
+    <script src="static/boostrap/js/bootstrap.js"></script>
+    <script src="static/easyUI/jquery.easyui.min.js"></script>
+    <script src="static/easyUI/locale/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+<div align="center">
+    <form id="ff" name="ff" method="post" enctype="multipart/form-data">
+        <div id="p">
+            <table align="center" style="margin-top:20px ;">
+                <tr>
+                    <td>
+                        <div class="input-group" style="margin:10px 0 10px 30px">
+                            <span class="input-group-addon">用户名</span>
+                            <input type="text" class="form-control" id="username" name="username" aria-describedby="basic-addon3">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="input-group" style="margin:10px 0 10px 30px">
+                            <span class="input-group-addon">密码</span>
+                            <input type="password" class="form-control" id="password" name="password" aria-describedby="basic-addon3">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="input-group" style="margin:10px 0 10px 30px">
+                            <span class="input-group-addon">请再次输入密码</span>
+                            <input type="password" class="form-control" id="password_confirm"
+                                   aria-describedby="basic-addon3">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="input-group" style="margin:10px 0 10px 30px">
+                            <span class="input-group-addon">窗口名称</span>
+                            <input type="text" class="form-control" id="windowName" name="windowName" aria-describedby="basic-addon3">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="input-group" style="margin:10px 0 10px 30px">
+                            <span class="input-group-addon">手机号码</span>
+                            <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" aria-describedby="basic-addon3">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="input-group" style="margin:10px 0 10px 30px">
+                            <span class="input-group-addon">窗口图片</span>
+                            <input type="file" class="form-control" id="windowImg" name="windowImg" aria-describedby="basic-addon3">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        <div align="center">
+                            <button type="button" class="btn btn-primary" id="regBtn">注册</button>
+                            <button type="button" class="btn btn-primary">重置</button>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </form>
+</div>
+</body>
+<script>
+    $('#p').panel({
+        width: 600,
+        height: 500,
+        title: '商家注册'
+    });
+    $("#regBtn").click(function () {
+        $('#ff').form('submit', {
+            url: '/admin/register',
+            onSubmit: function () {
+                var username = $("#username").val();
+                var password = $("#password").val();
+                var password_confirm = $("#password_confirm").val();
+                var windowName = $("#windowName").val();
+                var phoneNumber = $("#phoneNumber").val();
+                var windowImg = $("#windowImg").val();
+                if (username.length == 0 || password.length == 0 || password_confirm.length == 0 || windowName.length == 0 || phoneNumber.length == 0
+                    || windowImg.length == 0) {
+                    $.messager.alert("warning", "请将信息完整！");
+                    return 0;
+                }
+                if (password != password_confirm) {
+                    $.messager.alert("warning", "密码不一致！");
+                    return 0;
+                }
+                if(phoneNumber.length!=11)
+                {
+                    $.messager.alert("warning","请输入正确手机号");
+                }
+            },
+            success: function (msg) {
+                var data = JSON.parse(msg);
+                $.messager.alert("提示", data.msg, null, function () {
+                    if (data.state == "ok")
+                        location.href = 'SellerLogin.html';
+                })
+            }
+        });
+    });
+</script>
+
+
+</body>
+</html>
